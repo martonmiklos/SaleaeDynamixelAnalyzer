@@ -54,8 +54,12 @@ void DynamixelAnalyzer::WorkerThread()
 	ComputeSampleOffsets();
 
 	mSerial = GetAnalyzerChannelData( mSettings->mInputChannel );
+    if (mSettings->mInverted) {
+        mBitHigh = BIT_LOW;
+        mBitLow = BIT_HIGH;
+    }
 
-	if( mSerial->GetBitState() == BIT_LOW )
+    if( mSerial->GetBitState() == mBitLow )
 		mSerial->AdvanceToNextEdge();
 
 	U32 samples_per_bit = mSampleRateHz / mSettings->mBitRate;
@@ -81,7 +85,7 @@ void DynamixelAnalyzer::WorkerThread()
 			do {
 				mSerial->AdvanceToNextEdge(); //falling edge -- beginning of the start bit
 
-			} while ((mSerial->GetBitState() == BIT_HIGH));		// start bit should be logicall low. 
+            } while ((mSerial->GetBitState() == mBitHigh));		// start bit should be logicall low.
 
 			//U64 starting_sample = mSerial->GetSampleNumber();
 			if (DecodeIndex == DE_HEADER1)
@@ -113,14 +117,14 @@ void DynamixelAnalyzer::WorkerThread()
 				//NOTE: Dot, ErrorDot, Square, ErrorSquare, UpArrow, DownArrow, X, ErrorX, Start, Stop, One, Zero
 				//mResults->AddMarker( mSerial->GetSampleNumber(), AnalyzerResults::Start, mSettings->mInputChannel );
 				mSerial->Advance(mSampleOffsets[i]);
-				if (mSerial->GetBitState() == BIT_HIGH)
+                if (mSerial->GetBitState() == mBitHigh)
 					current_byte |= mask;
 
 //				mSerial->Advance(samples_per_bit);
 				mask = mask << 1;
 			}
 			mSerial->Advance(mStartOfStopBitOffset);
-		} while (mSerial->GetBitState() != BIT_HIGH);		// Stop bit should be logically high
+        } while (mSerial->GetBitState() != mBitHigh);		// Stop bit should be logically high
 
 		//Process new byte
 		

@@ -3,10 +3,6 @@
 
 
 DynamixelAnalyzerSettings::DynamixelAnalyzerSettings()
-:	mInputChannel( UNDEFINED_CHANNEL ),
-	mBitRate( 1000000 ),
-	mServoType (SERVO_TYPE_AX),
-	mShowWords ( true )
 {
 	mInputChannelInterface.reset( new AnalyzerSettingInterfaceChannel() );
 	mInputChannelInterface->SetTitleAndTooltip( "Dynamixel", "Standard Dynamixel Protocol" );
@@ -29,12 +25,17 @@ DynamixelAnalyzerSettings::DynamixelAnalyzerSettings()
 	mShowWordsInterface->SetCheckBoxText("Show L/W values as words");
 	mShowWordsInterface->SetValue(mShowWords);
 
-
+    mInvertedInterface.reset( new AnalyzerSettingInterfaceNumberList() );
+    mInvertedInterface->SetTitleAndTooltip( "", "Specify if the serial signal is inverted" );
+    mInvertedInterface->AddNumber( false, "Non Inverted (Standard)", "" );
+    mInvertedInterface->AddNumber( true, "Inverted", "" );
+    mInvertedInterface->SetNumber( mInverted );
 
 	AddInterface( mInputChannelInterface.get() );
 	AddInterface( mBitRateInterface.get() );
 	AddInterface( mServoTypeInterface.get() );
 	AddInterface(mShowWordsInterface.get());
+    AddInterface(mInvertedInterface.get());
 
 	AddExportOption(0, "Export as csv file");
 	AddExportExtension(0, "csv", "csv");
@@ -53,6 +54,7 @@ bool DynamixelAnalyzerSettings::SetSettingsFromInterfaces()
 	mBitRate = mBitRateInterface->GetInteger();
 	mServoType = (U32)mServoTypeInterface->GetNumber();
 	mShowWords = mShowWordsInterface->GetValue();
+    //mInverted = bool( U32( mInvertedInterface->GetNumber() ) );
 
 	ClearChannels();
 	AddChannel( mInputChannel, "Dynamixel Protocol", true );
@@ -66,6 +68,7 @@ void DynamixelAnalyzerSettings::UpdateInterfacesFromSettings()
 	mBitRateInterface->SetInteger( mBitRate );
 	mServoTypeInterface->SetNumber( mServoType );
 	mShowWordsInterface->SetValue(mShowWords);
+    //mInvertedInterface->SetNumber( mInverted );
 
 }
 
@@ -78,6 +81,7 @@ void DynamixelAnalyzerSettings::LoadSettings( const char* settings )
 	text_archive >> mBitRate;
 	text_archive >> mServoType;
 	text_archive >> mShowWords;
+    text_archive >> mInverted;
 
 
 	ClearChannels();
@@ -94,8 +98,7 @@ const char* DynamixelAnalyzerSettings::SaveSettings()
 	text_archive << mBitRate;
 	text_archive << mServoType;
 	text_archive << mShowWords;
-
-
+    text_archive << mInverted;
 
 	return SetReturnString( text_archive.GetString() );
 }

@@ -48,7 +48,6 @@ public:
 	{
 		AX_SERVOS,
 		MX_SERVOS
-
 	};
 
 protected: //functions
@@ -77,6 +76,8 @@ protected: //vars
     U8 mInstruction;
     U8 mData[ 256 ];
     U8 mChecksum;
+    BitState mBitHigh = BIT_HIGH;
+    BitState mBitLow = BIT_LOW;
 };
 
 extern "C" ANALYZER_EXPORT const char* __cdecl GetAnalyzerName();

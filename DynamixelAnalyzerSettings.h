@@ -17,17 +17,18 @@ public:
 	virtual const char* SaveSettings();
 
 	
-	Channel mInputChannel;
-	U32 mBitRate;
-	U32 mServoType;
-	bool mShowWords;
+    Channel mInputChannel = UNDEFINED_CHANNEL;
+    U32 mBitRate = 57600;
+    U32 mServoType = SERVO_TYPE_AX;
+    bool mShowWords = false;
+    bool mInverted = false;
 
 protected:
     std::unique_ptr< AnalyzerSettingInterfaceChannel >	mInputChannelInterface;
     std::unique_ptr< AnalyzerSettingInterfaceInteger >	mBitRateInterface;
     std::unique_ptr< AnalyzerSettingInterfaceNumberList >	mServoTypeInterface;
     std::unique_ptr< AnalyzerSettingInterfaceBool >	    mShowWordsInterface;
-
+    std::unique_ptr< AnalyzerSettingInterfaceNumberList >	mInvertedInterface;
 };
 
 #endif //DYNAMIXEL_ANALYZER_SETTINGS
