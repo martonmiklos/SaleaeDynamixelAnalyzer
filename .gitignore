@@ -1,11 +1,49 @@
-*.obj
-*.log
-*.tlog
-include/
-lib/
-*.exp
-*.iobj
-*.ipdb
-*.pdb
-*.lib
-Visual Studio 2015/.vs/DynamixelAnalyzer/v14/.suo
+# C++ objects and libs
+
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.dll
+*.dylib
+
+# Qt-es
+
+/.qmake.cache
+/.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.moc
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+*build-*
+
+# QtCreator
+*.Debug
+*.Release
+*.autosave
+
+# QtCtreator Qml
+*.qmlproject.user
+*.qmlproject.user.*
+
+# QtCtreator CMake
+CMakeLists.txt.user*
+
+bin
+build
+
+.directory
+
+buildnumber.h
+buildnumber.tmp
+*.tmp
+
+*.exe
